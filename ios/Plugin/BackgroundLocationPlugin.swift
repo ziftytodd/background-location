@@ -68,7 +68,7 @@ class Watcher {
 }
 
 @objc(BackgroundLocationPlugin)
-public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
+public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
     private var watchers = [Watcher]()
     private let locationManager = CLLocationManager()
     private var callPendingPermissions: CAPPluginCall?
@@ -261,7 +261,7 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
                         locationManager.delegate = self;
                         locationManager.requestWhenInUseAuthorization()
                     } else if ((locationManager.authorizationStatus == .authorizedWhenInUse) || (locationManager.authorizationStatus == .authorizedAlways)) {
-                        return call.resolve(["status": "granted"])
+                        call.resolve(["status": "granted"])
                     } else {
                         // Open the settings page
                         print("Opening settings page")
@@ -270,7 +270,7 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
                         print("Done opening setting page")
-                        return call.resolve(["status": "settingsPage"])
+                        call.resolve(["status": "settingsPage"])
                     }
                 } else {
                     // Fallback on earlier versions
@@ -279,7 +279,7 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
                         locationManager.delegate = self;
                         locationManager.requestWhenInUseAuthorization()
                     } else if ((CLLocationManager.authorizationStatus() == .authorizedWhenInUse) || (CLLocationManager.authorizationStatus() == .authorizedAlways)) {
-                        return call.resolve(["status": "granted"])
+                        call.resolve(["status": "granted"])
                     } else {
                         // Open the settings page
                         print("Opening settings page")
@@ -288,7 +288,7 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
                         print("Done opening setting page")
-                        return call.resolve(["status": "settingsPage"])
+                        call.resolve(["status": "settingsPage"])
                     }
                 }
             } else {

@@ -10,7 +10,6 @@ CAP_PLUGIN(BackgroundLocationPlugin, "BackgroundLocation",
     CAP_PLUGIN_METHOD(doCheckPermissions, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(doRequestPermissions, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(stayAwake, CAPPluginReturnPromise);
-
     CAP_PLUGIN_METHOD(doRequestWhenInUsePermission, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(doRequestAlwaysPermission, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(doRequestIgnoreDataSaver, CAPPluginReturnPromise);
