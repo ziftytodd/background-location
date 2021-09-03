@@ -44,24 +44,24 @@ import org.json.JSONObject;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 @CapacitorPlugin(
-    name = "BackgroundLocation",
-    permissions = {
-        @Permission(
-            alias = "location",
-            strings = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            }
-        ),
-        @Permission(
-            alias = "background-location",
-            strings = { Manifest.permission.ACCESS_BACKGROUND_LOCATION }
-        ),
-        @Permission(
-            alias = "battery",
-            strings = { Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS }
-        )
-    }
+        name = "BackgroundLocation",
+        permissions = {
+                @Permission(
+                        alias = "location",
+                        strings = {
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                        }
+                ),
+                @Permission(
+                        alias = "background-location",
+                        strings = { Manifest.permission.ACCESS_BACKGROUND_LOCATION }
+                ),
+                @Permission(
+                        alias = "battery",
+                        strings = { Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS }
+                )
+        }
 )
 public class BackgroundLocation extends Plugin {
     private PluginCall callPendingPermissions = null;
@@ -231,7 +231,7 @@ public class BackgroundLocation extends Plugin {
         boolean useSettingsPage = false;
 
         if (checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-            checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             status = "whenInUse";
             available = true;
             if (checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
@@ -289,7 +289,7 @@ public class BackgroundLocation extends Plugin {
     public void doRequestPermissions(PluginCall call) {
         callPendingPermissions = call;
         if (!(checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-              checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION))) {
+                checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION))) {
             requestPermissionForAlias("location", call, "locationPermsCallback");
         } else {
             requestPermissionForAlias("background-location", call, "backgroundlocationPermsCallback");
@@ -322,11 +322,20 @@ public class BackgroundLocation extends Plugin {
         boolean success = false;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Logger.info("BATTERY OPTIMAZATIONS package name " + getContext().getPackageName());
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setData(Uri.parse("package:" + getContext().getPackageName()));
                 getContext().startActivity(intent);
+
+                Logger.info("BATTERY OPTIMAZATIONS DONE");
+
+                PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+                if (pm.isIgnoringBatteryOptimizations(getContext().getPackageName())) {
+                    Logger.info("BATTERY OPTIMAZATIONS OFF");
+                } else {
+                    Logger.info("BATTERY OPTIMAZATIONS ON");
+                }
 
                 call.resolve(new JSObject().put("status", "granted"));
             }else {
