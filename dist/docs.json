@@ -91,7 +91,7 @@
         "slug": "stayawake"
       },
       {
-        "name": "requestWhenInUsePermission",
+        "name": "doRequestWhenInUsePermission",
         "signature": "() => any",
         "parameters": [],
         "returns": "any",
@@ -100,10 +100,10 @@
         "complexTypes": [
           "RequestPermissionsResult"
         ],
-        "slug": "requestwheninusepermission"
+        "slug": "dorequestwheninusepermission"
       },
       {
-        "name": "requestAlwaysPermission",
+        "name": "doRequestAlwaysPermission",
         "signature": "() => any",
         "parameters": [],
         "returns": "any",
@@ -112,10 +112,10 @@
         "complexTypes": [
           "RequestPermissionsResult"
         ],
-        "slug": "requestalwayspermission"
+        "slug": "dorequestalwayspermission"
       },
       {
-        "name": "requestIgnoreDataSaver",
+        "name": "doRequestIgnoreDataSaver",
         "signature": "() => any",
         "parameters": [],
         "returns": "any",
@@ -124,10 +124,10 @@
         "complexTypes": [
           "RequestPermissionsResult"
         ],
-        "slug": "requestignoredatasaver"
+        "slug": "dorequestignoredatasaver"
       },
       {
-        "name": "requestIgnoreBatteryOptimization",
+        "name": "doRequestIgnoreBatteryOptimization",
         "signature": "() => any",
         "parameters": [],
         "returns": "any",
@@ -136,7 +136,7 @@
         "complexTypes": [
           "RequestPermissionsResult"
         ],
-        "slug": "requestignorebatteryoptimization"
+        "slug": "dorequestignorebatteryoptimization"
       }
     ],
     "properties": []

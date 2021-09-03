@@ -39,8 +39,8 @@ export interface BackgroundLocationPlugin {
     doCheckPermissions(): Promise<CheckPermissionsResult>;
     doRequestPermissions(): Promise<RequestPermissionsResult>;
     stayAwake(): Promise<void>;
-    requestWhenInUsePermission(): Promise<RequestPermissionsResult>;
-    requestAlwaysPermission(): Promise<RequestPermissionsResult>;
-    requestIgnoreDataSaver(): Promise<RequestPermissionsResult>;
-    requestIgnoreBatteryOptimization(): Promise<RequestPermissionsResult>;
+    doRequestWhenInUsePermission(): Promise<RequestPermissionsResult>;
+    doRequestAlwaysPermission(): Promise<RequestPermissionsResult>;
+    doRequestIgnoreDataSaver(): Promise<RequestPermissionsResult>;
+    doRequestIgnoreBatteryOptimization(): Promise<RequestPermissionsResult>;
 }

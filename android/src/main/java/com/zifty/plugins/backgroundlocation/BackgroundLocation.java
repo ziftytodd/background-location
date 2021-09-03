@@ -297,7 +297,7 @@ public class BackgroundLocation extends Plugin {
     }
 
     @PluginMethod()
-    public void requestWhenInUsePermission(PluginCall call) {
+    public void doRequestWhenInUsePermission(PluginCall call) {
         if (!(checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION))) {
             callPendingPermissions = call;
@@ -308,7 +308,7 @@ public class BackgroundLocation extends Plugin {
     }
 
     @PluginMethod()
-    public void requestAlwaysPermission(PluginCall call) {
+    public void doRequestAlwaysPermission(PluginCall call) {
         if (!(checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
             callPendingPermissions = call;
             requestPermissionForAlias("background-location", call, "backgroundlocationPermsCallback");
@@ -318,7 +318,7 @@ public class BackgroundLocation extends Plugin {
     }
 
     @PluginMethod()
-    public void requestIgnoreBatteryOptimization(PluginCall call) {
+    public void doRequestIgnoreBatteryOptimization(PluginCall call) {
         boolean success = false;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -338,7 +338,7 @@ public class BackgroundLocation extends Plugin {
     }
 
     @PluginMethod()
-    public void requestIgnoreDataSaver(PluginCall call) {
+    public void doRequestIgnoreDataSaver(PluginCall call) {
         boolean success = false;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

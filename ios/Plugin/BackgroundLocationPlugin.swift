@@ -251,7 +251,7 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
         call.resolve()
     }
 
-    @objc func requestWhenInUsePermission(_ call: CAPPluginCall) {
+    @objc func doRequestWhenInUsePermission(_ call: CAPPluginCall) {
         DispatchQueue.main.async { [self] in
             NSLog("Checking perm before requesting")
             if CLLocationManager.locationServicesEnabled() {
@@ -297,7 +297,7 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
         }
     }
 
-    @objc func requestAlwaysPermission(_ call: CAPPluginCall) {
+    @objc func doRequestAlwaysPermission(_ call: CAPPluginCall) {
         DispatchQueue.main.async { [self] in
             NSLog("Checking perm before requesting")
             if CLLocationManager.locationServicesEnabled() {
@@ -333,11 +333,11 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
         }
     }
 
-    @objc func requestIgnoreDataSaver(_ call: CAPPluginCall) {
+    @objc func doRequestIgnoreDataSaver(_ call: CAPPluginCall) {
         call.resolve(["status": "granted"])
     }
 
-    @objc func requestIgnoreBatteryOptimization(_ call: CAPPluginCall) {
+    @objc func doRequestIgnoreBatteryOptimization(_ call: CAPPluginCall) {
         call.resolve(["status": "granted"])
     }
 

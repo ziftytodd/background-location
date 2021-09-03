@@ -11,8 +11,8 @@ CAP_PLUGIN(BackgroundLocationPlugin, "BackgroundLocation",
     CAP_PLUGIN_METHOD(doRequestPermissions, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(stayAwake, CAPPluginReturnPromise);
 
-    CAP_PLUGIN_METHOD(requestWhenInUsePermission, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(requestAlwaysPermission, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(requestIgnoreDataSaver, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(requestIgnoreBatteryOptimization, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(doRequestWhenInUsePermission, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(doRequestAlwaysPermission, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(doRequestIgnoreDataSaver, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(doRequestIgnoreBatteryOptimization, CAPPluginReturnPromise);
 )
