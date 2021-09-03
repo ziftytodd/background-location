@@ -1,0 +1,322 @@
+{
+  "api": {
+    "name": "BackgroundLocationPlugin",
+    "slug": "backgroundlocationplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "addWatcher",
+        "signature": "(options: WatcherOptions, callback: (position?: Location | undefined, error?: CallbackError | undefined) => void) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "WatcherOptions"
+          },
+          {
+            "name": "callback",
+            "docs": "",
+            "type": "(position?: Location | undefined, error?: CallbackError | undefined) => void"
+          }
+        ],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "WatcherOptions",
+          "Location",
+          "CallbackError"
+        ],
+        "slug": "addwatcher"
+      },
+      {
+        "name": "removeWatcher",
+        "signature": "(options: { id: string; }) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ id: string; }"
+          }
+        ],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "removewatcher"
+      },
+      {
+        "name": "openSettings",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "opensettings"
+      },
+      {
+        "name": "doCheckPermissions",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "CheckPermissionsResult"
+        ],
+        "slug": "docheckpermissions"
+      },
+      {
+        "name": "doRequestPermissions",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "RequestPermissionsResult"
+        ],
+        "slug": "dorequestpermissions"
+      },
+      {
+        "name": "requestIgnoreDataSaver",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "RequestPermissionsResult"
+        ],
+        "slug": "requestignoredatasaver"
+      },
+      {
+        "name": "requestIgnoreBatteryOptimization",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "RequestPermissionsResult"
+        ],
+        "slug": "requestignorebatteryoptimization"
+      },
+      {
+        "name": "stayAwake",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "stayawake"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "WatcherOptions",
+      "slug": "watcheroptions",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "backgroundMessage",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "backgroundTitle",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "requestPermissions",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "stale",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "distanceFilter",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | undefined"
+        },
+        {
+          "name": "minMillisBetweenUpdates",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | undefined"
+        }
+      ]
+    },
+    {
+      "name": "Location",
+      "slug": "location",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "latitude",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "longitude",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "accuracy",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "altitude",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | null"
+        },
+        {
+          "name": "altitudeAccuracy",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | null"
+        },
+        {
+          "name": "heading",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | null"
+        },
+        {
+          "name": "bearing",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "speed",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number | null"
+        },
+        {
+          "name": "time",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "name": "CallbackError",
+      "slug": "callbackerror",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "code",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string | undefined"
+        }
+      ]
+    },
+    {
+      "name": "CheckPermissionsResult",
+      "slug": "checkpermissionsresult",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "status",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "available",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "useSettingsPage",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "appWhitelisted",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "ignoreBatteryOptimizations",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        }
+      ]
+    },
+    {
+      "name": "RequestPermissionsResult",
+      "slug": "requestpermissionsresult",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "status",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "enums": []
+}
