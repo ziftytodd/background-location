@@ -3,6 +3,8 @@ ext {
     androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.2.0'
     androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.1.2'
     androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.3.0'
+    androidxLocalbroadcastmanagerVersion = project.hasProperty('androidxLocalbroadcastmanagerVersion') ? rootProject.ext.androidxLocalbroadcastmanagerVersion : '1.0.0'
+    playServicesLocationVersion = project.hasProperty('playServicesLocationVersion') ? rootProject.ext.playServicesLocationVersion : '17.0.0'
 }
 
 buildscript {
@@ -52,6 +54,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.localbroadcastmanager:localbroadcastmanager:$androidxLocalbroadcastmanagerVersion"
+    implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
