@@ -177,37 +177,37 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
                 if #available(iOS 14.0, *) {
                     switch locationManager.authorizationStatus {
                     case .notDetermined:
-                        return call.resolve(["status": "notDetermined", "available": false, "useSettingsPage": false ]);
+                        return call.resolve(["status": "notDetermined", "available": false, "useSettingsPage": false, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .restricted:
-                        return call.resolve(["status": "restricted", "available": false, "useSettingsPage": true ]);
+                        return call.resolve(["status": "restricted", "available": false, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .denied:
-                        return call.resolve(["status": "denied", "available": false, "useSettingsPage": true ]);
+                        return call.resolve(["status": "denied", "available": false, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .authorizedWhenInUse:
-                        return call.resolve(["status": "whenInUse", "available": true, "useSettingsPage": true ]);
+                        return call.resolve(["status": "whenInUse", "available": true, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .authorizedAlways:
-                        return call.resolve(["status": "always", "available": true, "useSettingsPage": false ]);
+                        return call.resolve(["status": "always", "available": true, "useSettingsPage": false, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     @unknown default:
-                        return call.resolve(["status": "unknown", "available": false, "useSettingsPage": false ]);
+                        return call.resolve(["status": "unknown", "available": false, "useSettingsPage": false, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     }
                 } else {
                     // Fallback on earlier versions
                     switch CLLocationManager.authorizationStatus() {
                     case .notDetermined:
-                        return call.resolve(["status": "notDetermined", "available": false, "useSettingsPage": false ]);
+                        return call.resolve(["status": "notDetermined", "available": false, "useSettingsPage": false, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .restricted:
-                        return call.resolve(["status": "restricted", "available": false, "useSettingsPage": true ]);
+                        return call.resolve(["status": "restricted", "available": false, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .denied:
-                        return call.resolve(["status": "denied", "available": false, "useSettingsPage": true ]);
+                        return call.resolve(["status": "denied", "available": false, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .authorizedWhenInUse:
-                        return call.resolve(["status": "whenInUse", "available": true, "useSettingsPage": true ]);
+                        return call.resolve(["status": "whenInUse", "available": true, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     case .authorizedAlways:
-                        return call.resolve(["status": "always", "available": true, "useSettingsPage": false ]);
+                        return call.resolve(["status": "always", "available": true, "useSettingsPage": false, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     @unknown default:
-                        return call.resolve(["status": "unknown", "available": false, "useSettingsPage": false ]);
+                        return call.resolve(["status": "unknown", "available": false, "useSettingsPage": false, "appWhitelisted": true, "ignoreBatteryOptimizations": true ]);
                     }
                 }
             } else {
-                return call.resolve(["status": "notEnabled"]);
+                return call.resolve(["status": "restricted", "available": false, "useSettingsPage": true, "appWhitelisted": true, "ignoreBatteryOptimizations": true]);
             }
         }
     }
