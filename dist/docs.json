@@ -81,6 +81,40 @@
         "slug": "dorequestpermissions"
       },
       {
+        "name": "stayAwake",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "stayawake"
+      },
+      {
+        "name": "requestWhenInUsePermission",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "RequestPermissionsResult"
+        ],
+        "slug": "requestwheninusepermission"
+      },
+      {
+        "name": "requestAlwaysPermission",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "RequestPermissionsResult"
+        ],
+        "slug": "requestalwayspermission"
+      },
+      {
         "name": "requestIgnoreDataSaver",
         "signature": "() => any",
         "parameters": [],
@@ -103,16 +137,6 @@
           "RequestPermissionsResult"
         ],
         "slug": "requestignorebatteryoptimization"
-      },
-      {
-        "name": "stayAwake",
-        "signature": "() => any",
-        "parameters": [],
-        "returns": "any",
-        "tags": [],
-        "docs": "",
-        "complexTypes": [],
-        "slug": "stayawake"
       }
     ],
     "properties": []

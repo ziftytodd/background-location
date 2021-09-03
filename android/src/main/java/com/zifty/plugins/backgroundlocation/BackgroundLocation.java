@@ -297,6 +297,27 @@ public class BackgroundLocation extends Plugin {
     }
 
     @PluginMethod()
+    public void requestWhenInUsePermission(PluginCall call) {
+        if (!(checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION))) {
+            callPendingPermissions = call;
+            requestPermissionForAlias("location", call, "locationPermsCallback");
+        } else {
+            call.resolve(new JSObject().put("status", "granted"));
+        }
+    }
+
+    @PluginMethod()
+    public void requestAlwaysPermission(PluginCall call) {
+        if (!(checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
+            callPendingPermissions = call;
+            requestPermissionForAlias("background-location", call, "backgroundlocationPermsCallback");
+        } else {
+            call.resolve(new JSObject().put("status", "granted"));
+        }
+    }
+
+    @PluginMethod()
     public void requestIgnoreBatteryOptimization(PluginCall call) {
         boolean success = false;
         try {

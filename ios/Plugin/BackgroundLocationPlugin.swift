@@ -251,6 +251,88 @@ public class BackgroundGeolocation : CAPPlugin, CLLocationManagerDelegate {
         call.resolve()
     }
 
+    @objc func requestWhenInUsePermission(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { [self] in
+            NSLog("Checking perm before requesting")
+            if CLLocationManager.locationServicesEnabled() {
+                if #available(iOS 14.0, *) {
+                    if (locationManager.authorizationStatus == .notDetermined) {
+                        self.callPendingPermissions = call;
+                        locationManager.delegate = self;
+                        locationManager.requestWhenInUseAuthorization()
+                    } else if ((locationManager.authorizationStatus == .authorizedWhenInUse) || (locationManager.authorizationStatus == .authorizedAlways)) {
+                        return call.resolve(["status": "granted"])
+                    } else {
+                        // Open the settings page
+                        print("Opening settings page")
+                        if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
+                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                        print("Done opening setting page")
+                        return call.resolve(["status": "settingsPage"])
+                    }
+                } else {
+                    // Fallback on earlier versions
+                    if (CLLocationManager.authorizationStatus() == .notDetermined) {
+                        self.callPendingPermissions = call;
+                        locationManager.delegate = self;
+                        locationManager.requestWhenInUseAuthorization()
+                    } else if ((CLLocationManager.authorizationStatus() == .authorizedWhenInUse) || (CLLocationManager.authorizationStatus() == .authorizedAlways)) {
+                        return call.resolve(["status": "granted"])
+                    } else {
+                        // Open the settings page
+                        print("Opening settings page")
+                        if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
+                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                        print("Done opening setting page")
+                        return call.resolve(["status": "settingsPage"])
+                    }
+                }
+            } else {
+                return call.resolve(["status": "restricted"])
+            }
+        }
+    }
+
+    @objc func requestAlwaysPermission(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { [self] in
+            NSLog("Checking perm before requesting")
+            if CLLocationManager.locationServicesEnabled() {
+                if #available(iOS 14.0, *) {
+                    if (locationManager.authorizationStatus != .authorizedAlways) {
+                        print("Opening settings page")
+                        if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
+                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                        print("Done opening setting page")
+                        return call.resolve(["status": "settingsPage"])
+                    } else {
+                        return call.resolve(["status": "granted"])
+                    }
+                } else {
+                    // Fallback on earlier versions
+                    if (CLLocationManager.authorizationStatus() != .authorizedAlways) {
+                        print("Opening settings page")
+                        if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
+                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                        print("Done opening setting page")
+                        return call.resolve(["status": "settingsPage"])
+                    } else {
+                        return call.resolve(["status": "granted"])
+                    }
+                }
+            } else {
+                return call.resolve(["status": "restricted"])
+            }
+        }
+    }
+
     @objc func requestIgnoreDataSaver(_ call: CAPPluginCall) {
         call.resolve(["status": "granted"])
     }
