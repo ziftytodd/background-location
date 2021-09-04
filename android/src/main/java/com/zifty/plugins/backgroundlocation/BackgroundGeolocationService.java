@@ -50,14 +50,18 @@ public class BackgroundGeolocationService extends Service {
         public Notification backgroundNotification;
         public int minMillis;
     }
-    private HashSet<Watcher> watchers = new HashSet<Watcher>();
+    // private HashSet<Watcher> watchers = new HashSet<Watcher>();
+    private Watcher mainWatcher;
 
     Notification getNotification() {
-        for (Watcher watcher : watchers) {
-            if (watcher.backgroundNotification != null) {
-                return watcher.backgroundNotification;
-            }
+        if ((mainWatcher != null) && (mainWatcher.backgroundNotification != null)) {
+            return mainWatcher.backgroundNotification;
         }
+//        for (Watcher watcher : watchers) {
+//            if (watcher.backgroundNotification != null) {
+//                return watcher.backgroundNotification;
+//            }
+//        }
         return null;
     }
 
@@ -69,8 +73,12 @@ public class BackgroundGeolocationService extends Service {
                 float distanceFilter,
                 final int minMillis
         ) {
+            if (mainWatcher != null) {
+                mainWatcher.client.removeLocationUpdates(mainWatcher.locationCallback);
+            }
+
             FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(
-                    BackgroundGeolocationService.this
+                BackgroundGeolocationService.this
             );
             LocationRequest locationRequest = new LocationRequest();
             locationRequest.setMaxWaitTime(1000);
@@ -104,46 +112,61 @@ public class BackgroundGeolocationService extends Service {
                 }
             };
 
-            Watcher watcher = new Watcher();
-            watcher.id = id;
-            watcher.client = client;
-            watcher.locationRequest = locationRequest;
-            watcher.locationCallback = callback;
-            watcher.backgroundNotification = backgroundNotification;
-            watcher.minMillis = minMillis;
-            watchers.add(watcher);
+            mainWatcher = new Watcher();
+            mainWatcher.id = id;
+            mainWatcher.client = client;
+            mainWatcher.locationRequest = locationRequest;
+            mainWatcher.locationCallback = callback;
+            mainWatcher.backgroundNotification = backgroundNotification;
+            mainWatcher.minMillis = minMillis;
+            //watchers.add(watcher);
 
-            watcher.client.requestLocationUpdates(
-                    watcher.locationRequest,
-                    watcher.locationCallback,
+            mainWatcher.client.requestLocationUpdates(
+                    mainWatcher.locationRequest,
+                    mainWatcher.locationCallback,
                     null
             );
         }
 
         void removeWatcher(String id) {
-            for (Watcher watcher : watchers) {
-                if (watcher.id.equals(id)) {
-                    watcher.client.removeLocationUpdates(watcher.locationCallback);
-                    watchers.remove(watcher);
-                    if (getNotification() == null) {
-                        stopForeground(true);
-                    }
-                    return;
+            if (mainWatcher != null) {
+                mainWatcher.client.removeLocationUpdates(mainWatcher.locationCallback);
+                mainWatcher = null;
+                if (getNotification() == null) {
+                    stopForeground(true);
                 }
             }
+//            for (Watcher watcher : watchers) {
+//                if (watcher.id.equals(id)) {
+//                    watcher.client.removeLocationUpdates(watcher.locationCallback);
+//                    watchers.remove(watcher);
+//                    if (getNotification() == null) {
+//                        stopForeground(true);
+//                    }
+//                    return;
+//                }
+//            }
         }
 
         void onPermissionsGranted() {
             // If permissions were granted while the app was in the background, for example in
             // the Settings app, the watchers need restarting.
-            for (Watcher watcher : watchers) {
-                watcher.client.removeLocationUpdates(watcher.locationCallback);
-                watcher.client.requestLocationUpdates(
-                        watcher.locationRequest,
-                        watcher.locationCallback,
+            if (mainWatcher != null) {
+                mainWatcher.client.removeLocationUpdates(mainWatcher.locationCallback);
+                mainWatcher.client.requestLocationUpdates(
+                        mainWatcher.locationRequest,
+                        mainWatcher.locationCallback,
                         null
                 );
             }
+//            for (Watcher watcher : watchers) {
+//                watcher.client.removeLocationUpdates(watcher.locationCallback);
+//                watcher.client.requestLocationUpdates(
+//                        watcher.locationRequest,
+//                        watcher.locationCallback,
+//                        null
+//                );
+//            }
         }
 
         void onActivityStarted() {
