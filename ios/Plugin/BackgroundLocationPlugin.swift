@@ -368,6 +368,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
     }
 
     public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        print("Unpausing location updates!")
         manager.startUpdatingLocation()
     }
 
