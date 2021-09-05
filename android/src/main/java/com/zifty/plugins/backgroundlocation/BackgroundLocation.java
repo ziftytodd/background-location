@@ -164,19 +164,21 @@ public class BackgroundLocation extends Plugin {
 
     @PermissionCallback
     private void locationPermsCallback(PluginCall call) {
-        if (getPermissionState("location") == PermissionState.GRANTED) {
-            callPendingPermissions.resolve(new JSObject().put("status", "whenInUse"));
-        } else {
-            callPendingPermissions.resolve(new JSObject().put("status", "denied"));
+        String status = "denied";
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) &&
+                checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+            status = "always";
+        } else if (checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            status = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ? "whenInUse" : "always";
         }
-    }
 
-    @PermissionCallback
-    private void backgroundlocationPermsCallback(PluginCall call) {
-        if (getPermissionState("background-location") == PermissionState.GRANTED) {
-            callPendingPermissions.resolve(new JSObject().put("status", "always"));
-        } else {
-            callPendingPermissions.resolve(new JSObject().put("status", "denied"));
+        if (callPendingPermissions != null) {
+            callPendingPermissions.resolve(new JSObject().put("status", status));
+            callPendingPermissions = null;
+        }
+        if (call != null) {
+            callPendingPermissions.resolve(new JSObject().put("status", status));
         }
     }
 
@@ -232,12 +234,15 @@ public class BackgroundLocation extends Plugin {
 
         if (checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            status = "whenInUse";
+            status = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ? "whenInUse" : "always";
             available = true;
-            if (checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-                status = "always";
-            } else if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-                useSettingsPage = true;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                    status = "always";
+                } else if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    useSettingsPage = true;
+                }
             }
         } else if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
             status = "denied";
@@ -292,7 +297,7 @@ public class BackgroundLocation extends Plugin {
                 checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION))) {
             requestPermissionForAlias("location", call, "locationPermsCallback");
         } else {
-            requestPermissionForAlias("background-location", call, "backgroundlocationPermsCallback");
+            requestPermissionForAlias("background-location", call, "locationPermsCallback");
         }
     }
 
@@ -309,11 +314,17 @@ public class BackgroundLocation extends Plugin {
 
     @PluginMethod()
     public void doRequestAlwaysPermission(PluginCall call) {
-        if (!(checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
-            callPendingPermissions = call;
-            requestPermissionForAlias("background-location", call, "backgroundlocationPermsCallback");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (!(checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
+                callPendingPermissions = call;
+                requestPermissionForAlias("background-location", call, "locationPermsCallback");
+            } else {
+                call.resolve(new JSObject().put("status", "granted"));
+            }
+        } else if (checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            call.resolve(new JSObject().put("status", "always"));
         } else {
-            call.resolve(new JSObject().put("status", "granted"));
+            doRequestWhenInUsePermission(call);
         }
     }
 
@@ -351,11 +362,9 @@ public class BackgroundLocation extends Plugin {
         boolean success = false;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Logger.info("DATA SAVER package name " + getContext().getPackageName());
                 Intent intent = new Intent();
-                ConnectivityManager connMgr = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
                 intent.setAction(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setData(Uri.parse("package:" + getContext().getPackageName()));
                 getContext().startActivity(intent);
 
