@@ -51,11 +51,7 @@ export type LocationListener = (event: LocationUpdateEvent) => void;
 
 export interface BackgroundLocationPlugin {
   addWatcher(
-      options: WatcherOptions,
-      callback: (
-          position?: Location,
-          error?: CallbackError
-      ) => void
+      options: WatcherOptions
   ): Promise<void>;
   removeWatcher(options: {
     id: string
