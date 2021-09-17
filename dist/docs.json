@@ -7,26 +7,19 @@
     "methods": [
       {
         "name": "addWatcher",
-        "signature": "(options: WatcherOptions, callback: (position?: Location | undefined, error?: CallbackError | undefined) => void) => any",
+        "signature": "(options: WatcherOptions) => any",
         "parameters": [
           {
             "name": "options",
             "docs": "",
             "type": "WatcherOptions"
-          },
-          {
-            "name": "callback",
-            "docs": "",
-            "type": "(position?: Location | undefined, error?: CallbackError | undefined) => void"
           }
         ],
         "returns": "any",
         "tags": [],
         "docs": "",
         "complexTypes": [
-          "WatcherOptions",
-          "Location",
-          "CallbackError"
+          "WatcherOptions"
         ],
         "slug": "addwatcher"
       },
@@ -92,12 +85,20 @@
       },
       {
         "name": "startMonitoring",
-        "signature": "() => any",
-        "parameters": [],
+        "signature": "(options: WatcherOptions) => any",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "WatcherOptions"
+          }
+        ],
         "returns": "any",
         "tags": [],
         "docs": "",
-        "complexTypes": [],
+        "complexTypes": [
+          "WatcherOptions"
+        ],
         "slug": "startmonitoring"
       },
       {
@@ -258,94 +259,6 @@
           "docs": "",
           "complexTypes": [],
           "type": "number | undefined"
-        }
-      ]
-    },
-    {
-      "name": "Location",
-      "slug": "location",
-      "docs": "",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "latitude",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number"
-        },
-        {
-          "name": "longitude",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number"
-        },
-        {
-          "name": "accuracy",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number"
-        },
-        {
-          "name": "altitude",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number | null"
-        },
-        {
-          "name": "altitudeAccuracy",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number | null"
-        },
-        {
-          "name": "heading",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number | null"
-        },
-        {
-          "name": "bearing",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number | null | undefined"
-        },
-        {
-          "name": "speed",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number | null"
-        },
-        {
-          "name": "time",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "number"
-        }
-      ]
-    },
-    {
-      "name": "CallbackError",
-      "slug": "callbackerror",
-      "docs": "",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "code",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "string | undefined"
         }
       ]
     },

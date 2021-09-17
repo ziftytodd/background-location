@@ -41,7 +41,7 @@ export interface LocationUpdateEvent {
 export declare type ErrorListener = (event: LocationErrorEvent) => void;
 export declare type LocationListener = (event: LocationUpdateEvent) => void;
 export interface BackgroundLocationPlugin {
-    addWatcher(options: WatcherOptions, callback: (position?: Location, error?: CallbackError) => void): Promise<void>;
+    addWatcher(options: WatcherOptions): Promise<void>;
     removeWatcher(options: {
         id: string;
     }): Promise<void>;
@@ -49,7 +49,7 @@ export interface BackgroundLocationPlugin {
     doCheckPermissions(): Promise<CheckPermissionsResult>;
     doRequestPermissions(): Promise<RequestPermissionsResult>;
     stayAwake(): Promise<void>;
-    startMonitoring(): Promise<void>;
+    startMonitoring(options: WatcherOptions): Promise<void>;
     stopMonitoring(): Promise<void>;
     doRequestWhenInUsePermission(): Promise<RequestPermissionsResult>;
     doRequestAlwaysPermission(): Promise<RequestPermissionsResult>;
