@@ -61,7 +61,7 @@ export interface BackgroundLocationPlugin {
   doRequestPermissions(): Promise<RequestPermissionsResult>;
   stayAwake(): Promise<void>;
 
-  startMonitoring(): Promise<void>;
+  startMonitoring(options: WatcherOptions): Promise<void>;
   stopMonitoring(): Promise<void>;
 
   doRequestWhenInUsePermission(): Promise<RequestPermissionsResult>;
