@@ -67,22 +67,33 @@ public class BackgroundLocation extends Plugin {
     private PluginCall callPendingPermissions = null;
     private Boolean stoppedWithoutPermissions = false;
 
-    @PluginMethod(returnType=PluginMethod.RETURN_CALLBACK)
+    @PluginMethod()
     public void addWatcher(final PluginCall call) {
         if (service == null) {
+            JSObject ret = new JSObject();
+            ret.put("reason", "Service not running");
+            ret.put("code", "SERVICE_NOT_RUNNING");
+            notifyListeners("error", ret);
             call.reject("Service not running.");
             return;
         }
-        call.setKeepAlive(true);
         if (getPermissionState("location") != PermissionState.GRANTED) {
             if (call.getBoolean("requestPermissions", true)) {
                 callPendingPermissions = call;
                 requestPermissionForAlias("location", call, "locationPermsCallback");
             } else {
+                JSObject ret = new JSObject();
+                ret.put("reason", "Permission not granted");
+                ret.put("code", "NOT_AUTHORIZED");
+                notifyListeners("error", ret);
                 call.reject("Permission not granted.", "NOT_AUTHORIZED");
             }
         } else {
             if (!isLocationEnabled(getContext())) {
+                JSObject ret = new JSObject();
+                ret.put("reason", "Location services turned off");
+                ret.put("code", "LOCATION_SERVICES_OFF");
+                notifyListeners("error", ret);
                 call.reject("Location services turned off.", "OFF");
             }
         }
@@ -95,7 +106,9 @@ public class BackgroundLocation extends Plugin {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                call.resolve(formatLocation(location));
+                                JSObject ret = new JSObject();
+                                ret.put("location", formatLocation(location));
+                                notifyListeners("locationUpdate", ret);
                             }
                         }
                     }
@@ -154,8 +167,7 @@ public class BackgroundLocation extends Plugin {
 
             backgroundNotification = builder.build();
         }
-        service.addWatcher(
-                call.getCallbackId(),
+        service.startWatcher(
                 backgroundNotification,
                 call.getFloat("distanceFilter", 0f),
                 call.getInt("minMillisBetweenUpdates", 0)
@@ -203,17 +215,18 @@ public class BackgroundLocation extends Plugin {
     }
 
     @PluginMethod()
+    public void startMonitoring(PluginCall call) {
+        addWatcher(call);
+    }
+
+    @PluginMethod()
+    public void stopMonitoring(PluginCall call) {
+        removeWatcher(call);
+    }
+
+    @PluginMethod()
     public void removeWatcher(PluginCall call) {
-        String callbackId = call.getString("id");
-        if (callbackId == null) {
-            call.reject("Missing id.");
-            return;
-        }
-        service.removeWatcher(callbackId);
-        PluginCall savedCall = bridge.getSavedCall(callbackId);
-        if (savedCall != null) {
-            savedCall.release(bridge);
-        }
+        service.stopWatcher();
         call.resolve();
     }
 
@@ -453,18 +466,11 @@ public class BackgroundLocation extends Plugin {
         @Override
         public void onReceive(Context context, Intent intent) {
             String id = intent.getStringExtra("id");
-            PluginCall call = bridge.getSavedCall(id);
-            if (call == null) {
-                return;
-            }
             Location location = intent.getParcelableExtra("location");
-            if (location == null) {
-                if (BuildConfig.DEBUG) {
-                    call.error("No locations received");
-                }
-                return;
-            }
-            call.success(formatLocation(location));
+            if (location == null) return;
+            JSObject ret = new JSObject();
+            ret.put("location", formatLocation(location));
+            notifyListeners("locationUpdate", ret);
         }
     }
 

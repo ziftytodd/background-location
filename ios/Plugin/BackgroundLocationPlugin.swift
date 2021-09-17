@@ -25,21 +25,17 @@ func formatLocation(_ location: CLLocation) -> PluginCallResultData {
 }
 
 class Watcher {
-    var callbackId: String
     let locationManager: CLLocationManager = CLLocationManager()
     private let created = Date()
     private let allowStale: Bool
     private let minMillisBetweenUpdates: Int
     private var lastUpdateTime: Int = 0
     private var isUpdatingLocation: Bool = false
-    init(_ id: String, stale: Bool, minMillis: Int) {
-        callbackId = id
+    init(stale: Bool, minMillis: Int) {
         allowStale = stale
         minMillisBetweenUpdates = minMillis
     }
-    func start(_ newId: String) {
-        self.callbackId = newId
-
+    func start() {
         // Avoid unnecessary calls to startUpdatingLocation, which can
         // result in extraneous invocations of didFailWithError.
         if !isUpdatingLocation {
@@ -80,16 +76,22 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
     }
 
     @objc func addWatcher(_ call: CAPPluginCall) {
-        call.keepAlive = true
+        if let existingWatcher = watcher {
+            print("Watcher already exists, so ignore request to start one")
+            call.resolve()
+            return
+        }
 
         // CLLocationManager requires main thread
         DispatchQueue.main.async {
             if let watch = self.watcher {
-                return watch.start(call.callbackId)
+                print("Watcher already exists, but request it to start anyways")
+                watch.start()
+                call.resolve()
+                return
             } else {
                 let background = call.getString("backgroundMessage") != nil
                 let watch = Watcher(
-                    call.callbackId,
                     stale: call.getBool("stale") ?? false,
                     minMillis: Int(call.getDouble("minMillisBetweenUpdates") ?? 0)
                 )
@@ -108,30 +110,25 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
                     "distanceFilter"
                 ) ?? kCLDistanceFilterNone;
                 manager.allowsBackgroundLocationUpdates = background
-//                 self.watchers.append(watcher)
-//                 if call.getBool("requestPermissions") != false {
-//                     let status = CLLocationManager.authorizationStatus()
-//                     if [
-//                         .notDetermined,
-//                         .denied,
-//                         .restricted,
-//                     ].contains(status) {
-//                         return (
-//                             background
-//                             ? manager.requestAlwaysAuthorization()
-//                             : manager.requestWhenInUseAuthorization()
-//                         )
-//                     }
-//                     if (
-//                         background && status == .authorizedWhenInUse
-//                     ) {
-//                         // Attempt to escalate.
-//                         manager.requestAlwaysAuthorization()
-//                     }
-//                 }
                 self.watcher = watch
-                return watch.start(call.callbackId)
+                watch.start()
+                call.resolve()
+                return
             }
+        }
+    }
+
+    @objc func startMonitoring(_ call: CAPPluginCall) {
+        self.addWatcher(call)
+    }
+
+    @objc func stopMonitoring(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            if let watch = self.watcher {
+                watch.stop()
+                self.watcher = nil
+            }
+            return call.resolve()
         }
     }
 
@@ -140,21 +137,9 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         DispatchQueue.main.async {
             if let watch = self.watcher {
                 watch.stop()
+                self.watcher = nil
             }
             return call.resolve()
-//             if let callbackId = call.getString("id") {
-//                 if let index = self.watchers.firstIndex(
-//                     where: { $0.callbackId == callbackId }
-//                 ) {
-//                     self.watchers[index].locationManager.stopUpdatingLocation()
-//                     self.watchers.remove(at: index)
-//                 }
-//                 if let savedCall = self.bridge?.savedCall(withID: callbackId) {
-//                     self.bridge?.releaseCall(savedCall)
-//                 }
-//                 return call.resolve()
-//             }
-//             return call.reject("No callback ID")
         }
     }
 
@@ -357,43 +342,18 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         didFailWithError error: Error
     ) {
         if let watch = self.watcher {
-            if let call = self.bridge?.savedCall(withID: watch.callbackId) {
-                if let clErr = error as? CLError {
-                    if clErr.code == .locationUnknown {
-                        // This error is sometimes sent by the manager if
-                        // it cannot get a fix immediately.
-                        return
-                    } else if (clErr.code == .denied) {
-                        watch.stop()
-                        return call.reject(
-                            "Permission denied.",
-                            "NOT_AUTHORIZED"
-                        )
-                    }
+            if let clErr = error as? CLError {
+                if clErr.code == .locationUnknown {
+                    // This error is sometimes sent by the manager if
+                    // it cannot get a fix immediately.
+                    return
+                } else if (clErr.code == .denied) {
+                    watch.stop()
+                    self.notifyListeners("error", data: [ "reason":"Permission denied", "code":"NOT_AUTHORIZED" ])
                 }
-                return call.reject(error.localizedDescription, nil, error)
             }
+            self.notifyListeners("error", data: [ "reason": "\(error.localizedDescription)", "code":"ERROR" ])
         }
-//         if let watcher = self.watchers.first(
-//             where: { $0.locationManager == manager }
-//         ) {
-//             if let call = self.bridge?.savedCall(withID: watcher.callbackId) {
-//                 if let clErr = error as? CLError {
-//                     if clErr.code == .locationUnknown {
-//                         // This error is sometimes sent by the manager if
-//                         // it cannot get a fix immediately.
-//                         return
-//                     } else if (clErr.code == .denied) {
-//                         watcher.stop()
-//                         return call.reject(
-//                             "Permission denied.",
-//                             "NOT_AUTHORIZED"
-//                         )
-//                     }
-//                 }
-//                 return call.reject(error.localizedDescription, nil, error)
-//             }
-//         }
     }
 
     public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
@@ -408,21 +368,9 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         if let location = locations.last {
             if let watch = self.watcher {
                 if watch.isLocationValid(location) {
-                    if let call = self.bridge?.savedCall(withID: watch.callbackId) {
-                        return call.resolve(formatLocation(location))
-                    }
+                    self.notifyListeners("locationUpdate", data: [ "location": formatLocation(location) ])
                 }
             }
-
-//             if let watcher = self.watchers.first(
-//                 where: { $0.locationManager == manager }
-//             ) {
-//                 if watcher.isLocationValid(location) {
-//                     if let call = self.bridge?.savedCall(withID: watcher.callbackId) {
-//                         return call.resolve(formatLocation(location))
-//                     }
-//                 }
-//             }
         }
     }
 
@@ -431,8 +379,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         didChangeAuthorization status: CLAuthorizationStatus
     ) {
         // If this method is called before the user decides on a permission, as
-        // it is on iOS 14 when the permissions dialog is presented, we ignore
-        // it.
+        // it is on iOS 14 when the permissions dialog is presented, we ignore it.
         print("Location authorization updated", status.rawValue)
 
         if status != .notDetermined {
@@ -446,12 +393,6 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
                 }
                 self.callPendingPermissions = nil
             }
-
-//             if let watcher = self.watchers.first(
-//                 where: { $0.locationManager == manager }
-//             ) {
-//                 return watcher.start()
-//             }
         }
     }
 }

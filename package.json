@@ -1,6 +1,6 @@
 {
   "name": "background-location",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Background geolocation",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

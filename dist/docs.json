@@ -91,6 +91,26 @@
         "slug": "stayawake"
       },
       {
+        "name": "startMonitoring",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "startmonitoring"
+      },
+      {
+        "name": "stopMonitoring",
+        "signature": "() => any",
+        "parameters": [],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "stopmonitoring"
+      },
+      {
         "name": "doRequestWhenInUsePermission",
         "signature": "() => any",
         "parameters": [],
@@ -137,6 +157,54 @@
           "RequestPermissionsResult"
         ],
         "slug": "dorequestignorebatteryoptimization"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'error', listenerFunc: ErrorListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "\"error\""
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(event: LocationErrorEvent) => void"
+          }
+        ],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "ErrorListener",
+          "PluginListenerHandle"
+        ],
+        "slug": "addlistener"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'locationUpdate', listenerFunc: LocationListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "\"locationUpdate\""
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(event: LocationUpdateEvent) => void"
+          }
+        ],
+        "returns": "any",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "LocationListener",
+          "PluginListenerHandle"
+        ],
+        "slug": "addlistener"
       }
     ],
     "properties": []
@@ -338,6 +406,22 @@
           "docs": "",
           "complexTypes": [],
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => any"
         }
       ]
     }

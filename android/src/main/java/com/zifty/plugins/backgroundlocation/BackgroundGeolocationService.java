@@ -43,39 +43,30 @@ public class BackgroundGeolocationService extends Service {
     }
 
     private class Watcher {
-        public String id;
         public FusedLocationProviderClient client;
         public LocationRequest locationRequest;
         public LocationCallback locationCallback;
         public Notification backgroundNotification;
         public int minMillis;
     }
-    // private HashSet<Watcher> watchers = new HashSet<Watcher>();
+
     private Watcher mainWatcher;
 
     Notification getNotification() {
         if ((mainWatcher != null) && (mainWatcher.backgroundNotification != null)) {
             return mainWatcher.backgroundNotification;
         }
-//        for (Watcher watcher : watchers) {
-//            if (watcher.backgroundNotification != null) {
-//                return watcher.backgroundNotification;
-//            }
-//        }
         return null;
     }
 
     // Handles requests from the activity.
     public class LocalBinder extends Binder {
-        void addWatcher(
-                final String id,
+        void startWatcher(
                 Notification backgroundNotification,
                 float distanceFilter,
                 final int minMillis
         ) {
-            if (mainWatcher != null) {
-                mainWatcher.client.removeLocationUpdates(mainWatcher.locationCallback);
-            }
+            if (mainWatcher != null) return;
 
             FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(
                 BackgroundGeolocationService.this
@@ -98,7 +89,6 @@ public class BackgroundGeolocationService extends Service {
                         lastTime = time;
                         Intent intent = new Intent(ACTION_BROADCAST);
                         intent.putExtra("location", location);
-                        intent.putExtra("id", id);
                         LocalBroadcastManager.getInstance(
                                 getApplicationContext()
                         ).sendBroadcast(intent);
@@ -113,13 +103,11 @@ public class BackgroundGeolocationService extends Service {
             };
 
             mainWatcher = new Watcher();
-            mainWatcher.id = id;
             mainWatcher.client = client;
             mainWatcher.locationRequest = locationRequest;
             mainWatcher.locationCallback = callback;
             mainWatcher.backgroundNotification = backgroundNotification;
             mainWatcher.minMillis = minMillis;
-            //watchers.add(watcher);
 
             mainWatcher.client.requestLocationUpdates(
                     mainWatcher.locationRequest,
@@ -128,7 +116,7 @@ public class BackgroundGeolocationService extends Service {
             );
         }
 
-        void removeWatcher(String id) {
+        void stopWatcher() {
             if (mainWatcher != null) {
                 mainWatcher.client.removeLocationUpdates(mainWatcher.locationCallback);
                 mainWatcher = null;
@@ -136,16 +124,6 @@ public class BackgroundGeolocationService extends Service {
                     stopForeground(true);
                 }
             }
-//            for (Watcher watcher : watchers) {
-//                if (watcher.id.equals(id)) {
-//                    watcher.client.removeLocationUpdates(watcher.locationCallback);
-//                    watchers.remove(watcher);
-//                    if (getNotification() == null) {
-//                        stopForeground(true);
-//                    }
-//                    return;
-//                }
-//            }
         }
 
         void onPermissionsGranted() {
@@ -159,14 +137,6 @@ public class BackgroundGeolocationService extends Service {
                         null
                 );
             }
-//            for (Watcher watcher : watchers) {
-//                watcher.client.removeLocationUpdates(watcher.locationCallback);
-//                watcher.client.requestLocationUpdates(
-//                        watcher.locationRequest,
-//                        watcher.locationCallback,
-//                        null
-//                );
-//            }
         }
 
         void onActivityStarted() {

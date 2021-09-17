@@ -1,3 +1,5 @@
+import type { PluginListenerHandle } from '@capacitor/core';
+
 export interface WatcherOptions {
   backgroundMessage?: string;
   backgroundTitle?: string;
@@ -35,6 +37,18 @@ export interface RequestPermissionsResult {
   status: string;
 }
 
+export interface LocationErrorEvent {
+  reason: string;
+  code: boolean;
+}
+
+export interface LocationUpdateEvent {
+  location: Location;
+}
+
+export type ErrorListener = (event: LocationErrorEvent) => void;
+export type LocationListener = (event: LocationUpdateEvent) => void;
+
 export interface BackgroundLocationPlugin {
   addWatcher(
       options: WatcherOptions,
@@ -42,7 +56,7 @@ export interface BackgroundLocationPlugin {
           position?: Location,
           error?: CallbackError
       ) => void
-  ): Promise<string>;
+  ): Promise<void>;
   removeWatcher(options: {
     id: string
   }): Promise<void>;
@@ -51,8 +65,22 @@ export interface BackgroundLocationPlugin {
   doRequestPermissions(): Promise<RequestPermissionsResult>;
   stayAwake(): Promise<void>;
 
+  startMonitoring(): Promise<void>;
+  stopMonitoring(): Promise<void>;
+
   doRequestWhenInUsePermission(): Promise<RequestPermissionsResult>;
   doRequestAlwaysPermission(): Promise<RequestPermissionsResult>;
   doRequestIgnoreDataSaver(): Promise<RequestPermissionsResult>;
   doRequestIgnoreBatteryOptimization(): Promise<RequestPermissionsResult>;
+
+  addListener(
+      eventName: 'error',
+      listenerFunc: ErrorListener,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  addListener(
+      eventName: 'locationUpdate',
+      listenerFunc: LocationListener,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
 }
