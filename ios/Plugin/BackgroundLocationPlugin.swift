@@ -34,6 +34,7 @@ class Watcher {
     init(stale: Bool, minMillis: Int) {
         allowStale = stale
         minMillisBetweenUpdates = minMillis
+        locationManager.showsBackgroundLocationIndicator = true
     }
     func start() {
         // Avoid unnecessary calls to startUpdatingLocation, which can
