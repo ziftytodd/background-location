@@ -26,28 +26,41 @@ func formatLocation(_ location: CLLocation) -> PluginCallResultData {
 
 class Watcher {
     let locationManager: CLLocationManager = CLLocationManager()
+    private let plugin: CAPPlugin;
     private let created = Date()
     private let allowStale: Bool
     private let minMillisBetweenUpdates: Int
     private var lastUpdateTime: Int = 0
     private var isUpdatingLocation: Bool = false
-    init(stale: Bool, minMillis: Int) {
+    init(stale: Bool, minMillis: Int, pl: CAPPlugin) {
         allowStale = stale
         minMillisBetweenUpdates = minMillis
+        plugin = pl
         locationManager.showsBackgroundLocationIndicator = true
     }
     func start() {
         // Avoid unnecessary calls to startUpdatingLocation, which can
         // result in extraneous invocations of didFailWithError.
         if !isUpdatingLocation {
+            plugin.notifyListeners("gpsLog", data: [ "message": "Start normal" ])
             locationManager.startUpdatingLocation()
             isUpdatingLocation = true
+        } else {
+            plugin.notifyListeners("gpsLog", data: [ "message": "Start skipped" ])
         }
+    }
+    func forceStart() {
+        plugin.notifyListeners("gpsLog", data: [ "message": "Start forced" ])
+        locationManager.startUpdatingLocation()
+        isUpdatingLocation = true
     }
     func stop() {
         if isUpdatingLocation {
+            plugin.notifyListeners("gpsLog", data: [ "message": "Stop normal" ])
             locationManager.stopUpdatingLocation()
             isUpdatingLocation = false
+        } else {
+            plugin.notifyListeners("gpsLog", data: [ "message": "Stop skipped" ])
         }
     }
     func isLocationValid(_ location: CLLocation) -> Bool {
@@ -79,6 +92,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
     @objc func addWatcher(_ call: CAPPluginCall) {
         if let existingWatcher = watcher {
             print("Watcher already exists, so ignore request to start one")
+            existingWatcher.forceStart()
             call.resolve()
             return
         }
@@ -87,14 +101,15 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         DispatchQueue.main.async {
             if let watch = self.watcher {
                 print("Watcher already exists, but request it to start anyways")
-                watch.start()
+                watch.forceStart()
                 call.resolve()
                 return
             } else {
                 let background = call.getString("backgroundMessage") != nil
                 let watch = Watcher(
                     stale: call.getBool("stale") ?? false,
-                    minMillis: Int(call.getDouble("minMillisBetweenUpdates") ?? 0)
+                    minMillis: Int(call.getDouble("minMillisBetweenUpdates") ?? 0),
+                    pl: self
                 )
                 let manager = watch.locationManager
                 manager.delegate = self
@@ -344,6 +359,8 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
     ) {
         if let watch = self.watcher {
             if let clErr = error as? CLError {
+                self.notifyListeners("gpsLog", data: [ "message": "ERROR: \(error.localizedDescription)", "code":"\(clErr.code)" ])
+
                 if clErr.code == .locationUnknown {
                     // This error is sometimes sent by the manager if
                     // it cannot get a fix immediately.
@@ -359,6 +376,8 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
 
     public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
         print("Unpausing location updates!")
+        self.notifyListeners("gpsLog", data: [ "message": "didPauseLocationUpdates" ])
+
         manager.startUpdatingLocation()
     }
 
@@ -382,6 +401,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         // If this method is called before the user decides on a permission, as
         // it is on iOS 14 when the permissions dialog is presented, we ignore it.
         print("Location authorization updated", status.rawValue)
+        self.notifyListeners("gpsLog", data: [ "message": "Authorization updated", "code": "\(status.rawValue)" ])
 
         if status != .notDetermined {
             if let call = self.callPendingPermissions {

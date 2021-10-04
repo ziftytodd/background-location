@@ -38,8 +38,13 @@ export interface LocationErrorEvent {
 export interface LocationUpdateEvent {
     location: Location;
 }
+export interface GpsLog {
+    message: string;
+    code?: string;
+}
 export declare type ErrorListener = (event: LocationErrorEvent) => void;
 export declare type LocationListener = (event: LocationUpdateEvent) => void;
+export declare type LogListener = (event: GpsLog) => void;
 export interface BackgroundLocationPlugin {
     addWatcher(options: WatcherOptions): Promise<void>;
     removeWatcher(options: {
@@ -57,4 +62,5 @@ export interface BackgroundLocationPlugin {
     doRequestIgnoreBatteryOptimization(): Promise<RequestPermissionsResult>;
     addListener(eventName: 'error', listenerFunc: ErrorListener): Promise<PluginListenerHandle> & PluginListenerHandle;
     addListener(eventName: 'locationUpdate', listenerFunc: LocationListener): Promise<PluginListenerHandle> & PluginListenerHandle;
+    addListener(eventName: 'gpsLog', listenerFunc: LogListener): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
