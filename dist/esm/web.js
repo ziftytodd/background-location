@@ -1,14 +1,5 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var core = require('@capacitor/core');
-
-const BackgroundLocation = core.registerPlugin('BackgroundLocation', {
-    web: () => Promise.resolve().then(function () { return web; }).then(m => new m.BackgroundLocationWeb()),
-});
-
-class BackgroundLocationWeb extends core.WebPlugin {
+import { WebPlugin } from '@capacitor/core';
+export class BackgroundLocationWeb extends WebPlugin {
     addWatcher(options) {
         console.log('Add watcher', options);
         return Promise.resolve(undefined);
@@ -55,11 +46,4 @@ class BackgroundLocationWeb extends core.WebPlugin {
         return Promise.resolve(undefined);
     }
 }
-
-var web = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    BackgroundLocationWeb: BackgroundLocationWeb
-});
-
-exports.BackgroundLocation = BackgroundLocation;
-//# sourceMappingURL=plugin.cjs.js.map
+//# sourceMappingURL=web.js.map

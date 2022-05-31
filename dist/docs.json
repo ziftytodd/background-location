@@ -7,7 +7,7 @@
     "methods": [
       {
         "name": "addWatcher",
-        "signature": "(options: WatcherOptions) => any",
+        "signature": "(options: WatcherOptions) => Promise<void>",
         "parameters": [
           {
             "name": "options",
@@ -15,7 +15,7 @@
             "type": "WatcherOptions"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -25,7 +25,7 @@
       },
       {
         "name": "removeWatcher",
-        "signature": "(options: { id: string; }) => any",
+        "signature": "(options: { id: string; }) => Promise<void>",
         "parameters": [
           {
             "name": "options",
@@ -33,7 +33,7 @@
             "type": "{ id: string; }"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
@@ -41,9 +41,9 @@
       },
       {
         "name": "openSettings",
-        "signature": "() => any",
+        "signature": "() => Promise<void>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
@@ -51,9 +51,9 @@
       },
       {
         "name": "doCheckPermissions",
-        "signature": "() => any",
+        "signature": "() => Promise<CheckPermissionsResult>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<CheckPermissionsResult>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -63,9 +63,9 @@
       },
       {
         "name": "doRequestPermissions",
-        "signature": "() => any",
+        "signature": "() => Promise<RequestPermissionsResult>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<RequestPermissionsResult>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -75,9 +75,9 @@
       },
       {
         "name": "stayAwake",
-        "signature": "() => any",
+        "signature": "() => Promise<void>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
@@ -85,7 +85,7 @@
       },
       {
         "name": "startMonitoring",
-        "signature": "(options: WatcherOptions) => any",
+        "signature": "(options: WatcherOptions) => Promise<void>",
         "parameters": [
           {
             "name": "options",
@@ -93,7 +93,7 @@
             "type": "WatcherOptions"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -103,9 +103,9 @@
       },
       {
         "name": "stopMonitoring",
-        "signature": "() => any",
+        "signature": "() => Promise<void>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
@@ -113,9 +113,9 @@
       },
       {
         "name": "doRequestWhenInUsePermission",
-        "signature": "() => any",
+        "signature": "() => Promise<RequestPermissionsResult>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<RequestPermissionsResult>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -125,9 +125,9 @@
       },
       {
         "name": "doRequestAlwaysPermission",
-        "signature": "() => any",
+        "signature": "() => Promise<RequestPermissionsResult>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<RequestPermissionsResult>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -137,9 +137,9 @@
       },
       {
         "name": "doRequestIgnoreDataSaver",
-        "signature": "() => any",
+        "signature": "() => Promise<RequestPermissionsResult>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<RequestPermissionsResult>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -149,9 +149,9 @@
       },
       {
         "name": "doRequestIgnoreBatteryOptimization",
-        "signature": "() => any",
+        "signature": "() => Promise<RequestPermissionsResult>",
         "parameters": [],
-        "returns": "any",
+        "returns": "Promise<RequestPermissionsResult>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -174,12 +174,12 @@
             "type": "(event: LocationErrorEvent) => void"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
         "tags": [],
         "docs": "",
         "complexTypes": [
-          "ErrorListener",
-          "PluginListenerHandle"
+          "PluginListenerHandle",
+          "ErrorListener"
         ],
         "slug": "addlistener"
       },
@@ -198,12 +198,12 @@
             "type": "(event: LocationUpdateEvent) => void"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
         "tags": [],
         "docs": "",
         "complexTypes": [
-          "LocationListener",
-          "PluginListenerHandle"
+          "PluginListenerHandle",
+          "LocationListener"
         ],
         "slug": "addlistener"
       },
@@ -222,12 +222,12 @@
             "type": "(event: GpsLog) => void"
           }
         ],
-        "returns": "any",
+        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
         "tags": [],
         "docs": "",
         "complexTypes": [
-          "LogListener",
-          "PluginListenerHandle"
+          "PluginListenerHandle",
+          "LogListener"
         ],
         "slug": "addlistener"
       }
@@ -358,7 +358,7 @@
           "tags": [],
           "docs": "",
           "complexTypes": [],
-          "type": "() => any"
+          "type": "() => Promise<void>"
         }
       ]
     }
