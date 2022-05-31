@@ -1,6 +1,8 @@
 import { WebPlugin } from '@capacitor/core';
 import type { BackgroundLocationPlugin, CheckPermissionsResult, RequestPermissionsResult, WatcherOptions } from './definitions';
 export declare class BackgroundLocationWeb extends WebPlugin implements BackgroundLocationPlugin {
+    private locUpdateTimer;
+    start(): void;
     addWatcher(options: WatcherOptions): Promise<void>;
     doCheckPermissions(): Promise<CheckPermissionsResult>;
     doRequestAlwaysPermission(): Promise<RequestPermissionsResult>;

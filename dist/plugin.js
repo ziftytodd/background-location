@@ -6,8 +6,27 @@ var capacitorBackgroundLocation = (function (exports, core) {
     });
 
     class BackgroundLocationWeb extends core.WebPlugin {
+        start() {
+            if (!this.locUpdateTimer) {
+                this.locUpdateTimer = setInterval(() => {
+                    this.notifyListeners('locationUpdate', {
+                        location: {
+                            latitude: 33.7542194,
+                            longitude: -84.3914007,
+                            accuracy: 10,
+                            altitude: 0,
+                            altitudeAccuracy: 10,
+                            heading: 0,
+                            speed: 0,
+                            time: new Date().getTime(),
+                        }
+                    });
+                }, 5000);
+            }
+        }
         addWatcher(options) {
             console.log('Add watcher', options);
+            this.start();
             return Promise.resolve(undefined);
         }
         doCheckPermissions() {
@@ -43,6 +62,7 @@ var capacitorBackgroundLocation = (function (exports, core) {
         }
         startMonitoring(options) {
             console.log('Start monitoring', options);
+            this.start();
             return Promise.resolve(undefined);
         }
         stayAwake() {

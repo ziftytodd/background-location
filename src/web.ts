@@ -11,8 +11,30 @@ export class BackgroundLocationWeb
     extends WebPlugin
     implements BackgroundLocationPlugin {
 
+    private locUpdateTimer: any;
+
+    start(): void {
+        if (!this.locUpdateTimer) {
+            this.locUpdateTimer = setInterval(() => {
+                this.notifyListeners('locationUpdate', {
+                    location: {
+                        latitude: 33.7542194,
+                        longitude: -84.3914007,
+                        accuracy: 10,
+                        altitude: 0,
+                        altitudeAccuracy: 10,
+                        heading: 0,
+                        speed: 0,
+                        time: new Date().getTime(),
+                    }
+                })
+            }, 5000);
+        }
+    }
+
     addWatcher(options: WatcherOptions): Promise<void> {
         console.log('Add watcher', options);
+        this.start();
         return Promise.resolve(undefined);
     }
 
@@ -57,6 +79,7 @@ export class BackgroundLocationWeb
 
     startMonitoring(options: WatcherOptions): Promise<void> {
         console.log('Start monitoring', options);
+        this.start();
         return Promise.resolve(undefined);
     }
 
