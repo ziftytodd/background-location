@@ -234,7 +234,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
                         NSLog("Requesting permission")
                         self.callPendingPermissions = call;
                         locationManager.delegate = self;
-                        locationManager.requestAlwaysAuthorization()
+                        locationManager.requestWhenInUseAuthorization();
                         return
                     default:
                         return call.resolve(["status": "notRequested"])
@@ -246,13 +246,14 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
                         NSLog("Requesting permission")
                         self.callPendingPermissions = call;
                         locationManager.delegate = self;
-                        locationManager.requestAlwaysAuthorization()
+                        locationManager.requestWhenInUseAuthorization();
                         return
                     default:
                         return call.resolve(["status": "notRequested"])
                     }
                 }
             } else {
+                NSLog("Requesting always permission")
                 self.callPendingPermissions = call;
                 locationManager.requestAlwaysAuthorization()
             }
@@ -315,12 +316,21 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
             if CLLocationManager.locationServicesEnabled() {
                 if #available(iOS 14.0, *) {
                     if (locationManager.authorizationStatus != .authorizedAlways) {
-                        print("Opening settings page")
-                        if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
-                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
-                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        NSLog("Requesting always permission")
+                        self.callPendingPermissions = call;
+                        locationManager.requestAlwaysAuthorization()
+                        NSLog("Back from requesting always permission")
+                        if (locationManager.authorizationStatus == .authorizedAlways) {
+                            return call.resolve(["status": "granted"])
+                        } else {
+                            return call.resolve(["status": "settingsPage"])
                         }
-                        print("Done opening setting page")
+//                         print("Opening settings page")
+//                         if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
+//                             let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
+//                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//                         }
+//                         print("Done opening setting page")
                         return call.resolve(["status": "settingsPage"])
                     } else {
                         return call.resolve(["status": "granted"])
