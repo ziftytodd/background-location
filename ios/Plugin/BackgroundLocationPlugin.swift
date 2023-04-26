@@ -320,18 +320,15 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
                         self.callPendingPermissions = call;
                         locationManager.requestAlwaysAuthorization()
                         NSLog("Back from requesting always permission")
-                        if (locationManager.authorizationStatus == .authorizedAlways) {
-                            return call.resolve(["status": "granted"])
-                        } else {
-                            return call.resolve(["status": "settingsPage"])
-                        }
+                        return call.resolve(["status": "requested"])
+
 //                         print("Opening settings page")
 //                         if let BUNDLE_IDENTIFIER = Bundle.main.bundleIdentifier,
 //                             let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(BUNDLE_IDENTIFIER)") {
 //                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
 //                         }
 //                         print("Done opening setting page")
-                        return call.resolve(["status": "settingsPage"])
+//                         return call.resolve(["status": "settingsPage"])
                     } else {
                         return call.resolve(["status": "granted"])
                     }
