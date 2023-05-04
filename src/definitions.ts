@@ -42,6 +42,10 @@ export interface LocationErrorEvent {
   code: boolean;
 }
 
+export interface PermissionChangeEvent {
+  status: 'notRequested' | 'notDetermined' | 'restricted' | 'denied' | 'whenInUse' | 'always' | 'granted' | 'unknown';
+}
+
 export interface LocationUpdateEvent {
   location: Location;
 }
@@ -54,6 +58,7 @@ export interface GpsLog {
 export type ErrorListener = (event: LocationErrorEvent) => void;
 export type LocationListener = (event: LocationUpdateEvent) => void;
 export type LogListener = (event: GpsLog) => void;
+export type PermissionChangeListener = (event: PermissionChangeEvent) => void;
 
 export interface BackgroundLocationPlugin {
   addWatcher(
@@ -88,6 +93,11 @@ export interface BackgroundLocationPlugin {
   addListener(
       eventName: 'gpsLog',
       listenerFunc: LogListener,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  addListener(
+      eventName: 'permissionChange',
+      listenerFunc: PermissionChangeListener,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
 }

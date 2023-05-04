@@ -397,7 +397,6 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
-        NSLog("Got didUpdateLocations")
         if let location = locations.last {
             if let watch = self.watcher {
                 if watch.isLocationValid(location) {
@@ -419,10 +418,13 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         if status != .notDetermined {
             if let call = self.callPendingPermissions {
                 if status == .authorizedAlways {
+                    self.notifyListeners("permissionChange", data: [ "status": "always" ])
                     call.resolve(["status": "always"])
                 } else if status == .authorizedWhenInUse {
+                    self.notifyListeners("permissionChange", data: [ "status": "whenInUse" ])
                     call.resolve(["status": "whenInUse"])
                 } else {
+                    self.notifyListeners("permissionChange", data: [ "status": "denied" ])
                     call.resolve(["status": "denied"])
                 }
                 self.callPendingPermissions = nil

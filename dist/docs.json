@@ -230,6 +230,30 @@
           "LogListener"
         ],
         "slug": "addlistener"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'permissionChange', listenerFunc: PermissionChangeListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "\"permissionChange\""
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(event: PermissionChangeEvent) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "PermissionChangeListener"
+        ],
+        "slug": "addlistener"
       }
     ],
     "properties": []
