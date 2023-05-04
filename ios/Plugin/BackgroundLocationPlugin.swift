@@ -269,6 +269,8 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
             NSLog("Checking perm before requesting")
             if CLLocationManager.locationServicesEnabled() {
                 if #available(iOS 14.0, *) {
+                    NSLog("Current perm=\(locationManager.authorizationStatus)")
+
                     if (locationManager.authorizationStatus == .notDetermined) {
                         self.callPendingPermissions = call;
                         locationManager.delegate = self;
@@ -312,9 +314,11 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
 
     @objc func doRequestAlwaysPermission(_ call: CAPPluginCall) {
         DispatchQueue.main.async { [self] in
-            NSLog("Checking perm before requesting")
+            NSLog("Checking perm before requesting always")
             if CLLocationManager.locationServicesEnabled() {
                 if #available(iOS 14.0, *) {
+                    NSLog("Current perm=\(locationManager.authorizationStatus)")
+
                     if (locationManager.authorizationStatus != .authorizedAlways) {
                         NSLog("Requesting always permission")
                         self.callPendingPermissions = call;
@@ -364,6 +368,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didFailWithError error: Error
     ) {
+        NSLog("Got didFailWithError: \(error)")
         if let watch = self.watcher {
             if let clErr = error as? CLError {
                 self.notifyListeners("gpsLog", data: [ "message": "ERROR: \(error.localizedDescription)", "code":"\(clErr.code)" ])
@@ -392,6 +397,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
+        NSLog("Got didUpdateLocations")
         if let location = locations.last {
             if let watch = self.watcher {
                 if watch.isLocationValid(location) {
@@ -407,7 +413,7 @@ public class BackgroundLocationPlugin : CAPPlugin, CLLocationManagerDelegate {
     ) {
         // If this method is called before the user decides on a permission, as
         // it is on iOS 14 when the permissions dialog is presented, we ignore it.
-        print("Location authorization updated", status.rawValue)
+        print("Location authorization updated!", status.rawValue)
         self.notifyListeners("gpsLog", data: [ "message": "Authorization updated", "code": "\(status.rawValue)" ])
 
         if status != .notDetermined {
