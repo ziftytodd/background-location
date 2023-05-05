@@ -1,6 +1,7 @@
 package com.zifty.plugins.backgroundlocation;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -66,6 +67,7 @@ public class BackgroundLocation extends Plugin {
     private PluginCall callPendingPermissions = null;
     private Boolean stoppedWithoutPermissions = false;
 
+    @SuppressLint("MissingPermission")
     @PluginMethod()
     public void addWatcher(final PluginCall call) {
         if (service == null) {
@@ -154,7 +156,7 @@ public class BackgroundLocation extends Plugin {
                                 getContext(),
                                 0,
                                 launchIntent,
-                                PendingIntent.FLAG_CANCEL_CURRENT
+                                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT
                         )
                 );
             }
