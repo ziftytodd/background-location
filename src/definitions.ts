@@ -83,21 +83,21 @@ export interface BackgroundLocationPlugin {
   addListener(
       eventName: 'error',
       listenerFunc: ErrorListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
       eventName: 'locationUpdate',
       listenerFunc: LocationListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
       eventName: 'gpsLog',
       listenerFunc: LogListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
       eventName: 'permissionChange',
       listenerFunc: PermissionChangeListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
 }

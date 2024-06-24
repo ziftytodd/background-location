@@ -64,8 +64,8 @@ export interface BackgroundLocationPlugin {
     doRequestAlwaysPermission(): Promise<RequestPermissionsResult>;
     doRequestIgnoreDataSaver(): Promise<RequestPermissionsResult>;
     doRequestIgnoreBatteryOptimization(): Promise<RequestPermissionsResult>;
-    addListener(eventName: 'error', listenerFunc: ErrorListener): Promise<PluginListenerHandle> & PluginListenerHandle;
-    addListener(eventName: 'locationUpdate', listenerFunc: LocationListener): Promise<PluginListenerHandle> & PluginListenerHandle;
-    addListener(eventName: 'gpsLog', listenerFunc: LogListener): Promise<PluginListenerHandle> & PluginListenerHandle;
-    addListener(eventName: 'permissionChange', listenerFunc: PermissionChangeListener): Promise<PluginListenerHandle> & PluginListenerHandle;
+    addListener(eventName: 'error', listenerFunc: ErrorListener): Promise<PluginListenerHandle>;
+    addListener(eventName: 'locationUpdate', listenerFunc: LocationListener): Promise<PluginListenerHandle>;
+    addListener(eventName: 'gpsLog', listenerFunc: LogListener): Promise<PluginListenerHandle>;
+    addListener(eventName: 'permissionChange', listenerFunc: PermissionChangeListener): Promise<PluginListenerHandle>;
 }

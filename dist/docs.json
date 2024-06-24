@@ -161,7 +161,7 @@
       },
       {
         "name": "addListener",
-        "signature": "(eventName: 'error', listenerFunc: ErrorListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "signature": "(eventName: 'error', listenerFunc: ErrorListener) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -174,7 +174,7 @@
             "type": "(event: LocationErrorEvent) => void"
           }
         ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -185,7 +185,7 @@
       },
       {
         "name": "addListener",
-        "signature": "(eventName: 'locationUpdate', listenerFunc: LocationListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "signature": "(eventName: 'locationUpdate', listenerFunc: LocationListener) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -198,7 +198,7 @@
             "type": "(event: LocationUpdateEvent) => void"
           }
         ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -209,7 +209,7 @@
       },
       {
         "name": "addListener",
-        "signature": "(eventName: 'gpsLog', listenerFunc: LogListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "signature": "(eventName: 'gpsLog', listenerFunc: LogListener) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -222,7 +222,7 @@
             "type": "(event: GpsLog) => void"
           }
         ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [],
         "docs": "",
         "complexTypes": [
@@ -233,7 +233,7 @@
       },
       {
         "name": "addListener",
-        "signature": "(eventName: 'permissionChange', listenerFunc: PermissionChangeListener) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "signature": "(eventName: 'permissionChange', listenerFunc: PermissionChangeListener) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -246,7 +246,7 @@
             "type": "(event: PermissionChangeEvent) => void"
           }
         ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [],
         "docs": "",
         "complexTypes": [
